@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use or adapt the Research Companion, please cite it."
+title: "Research Companion: a verification-first research collaboration for AI coding agents"
+authors:
+  - family-names: "Liegertová"
+    given-names: "Michaela"
+version: 0.3.1
+date-released: "2026-07-05"
+license: MIT
+abstract: >-
+  A drop-in Claude Code configuration that turns an AI agent into a thoughtful
+  research colleague designed to protect researchers against de-skilling: a
+  six-phase lifecycle grounded in current literature, decisions signed in the
+  researcher's own words and enforced by hooks, every specification run
+  auto-logged, finished work verified blind by a fresh-eyes reviewer, and the
+  researcher's calibration kept in training. Drafted with Claude (Fable 5) and
+  rebuilt from a live, sealed-truth test arc; the materials practise the
+  verification they preach.

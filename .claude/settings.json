@@ -1,0 +1,36 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v py >/dev/null 2>&1; then PY='py -3'; elif python3 -c '' >/dev/null 2>&1; then PY=python3; elif python -c '' >/dev/null 2>&1; then PY=python; else PY=''; fi; if [ -n \"$PY\" ]; then $PY \"$CLAUDE_PROJECT_DIR/.claude/hooks/session_brief.py\"; else echo '[research-companion] NOTE: Python 3 was not found on this machine, so the enforcement hooks (the analysis gate and the specification log) are OFF. Tell the researcher kindly before any analysis happens, run those rules manually until Python is installed (python.org, 2 minutes), and say plainly that enforced would be better than promised.'; fi"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v py >/dev/null 2>&1; then PY='py -3'; elif python3 -c '' >/dev/null 2>&1; then PY=python3; else PY=python; fi; $PY \"$CLAUDE_PROJECT_DIR/.claude/hooks/gate_check.py\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v py >/dev/null 2>&1; then PY='py -3'; elif python3 -c '' >/dev/null 2>&1; then PY=python3; else PY=python; fi; $PY \"$CLAUDE_PROJECT_DIR/.claude/hooks/spec_log.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

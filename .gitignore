@@ -1,0 +1,22 @@
+# Data never goes to a remote by default — this is red-line safety, not tidiness.
+# If your data is 100% public and you *want* it versioned, remove these lines deliberately.
+data/
+!data/README.md
+!data/raw/.gitkeep
+
+# Fetched fulltexts are retrievable from the fetch log; don't bloat the repo.
+literature/*.pdf
+literature/inbox/*
+!literature/inbox/.gitkeep
+# The researcher's contact email for Unpaywall — personal, stays local.
+literature/.unpaywall-email
+
+# The dashboard is a generated view; the logs it renders are the source of truth.
+dashboard.html
+
+__pycache__/
+.DS_Store
+Thumbs.db
+
+# Deliberately TRACKED (that's the point — they are the coauthor communication):
+# PROJECT.md · decisions/ · logs/ · literature/reading-list.csv · literature/fetch-log.md
