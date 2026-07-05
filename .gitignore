@@ -1,7 +1,11 @@
 # Data never goes to a remote by default — this is red-line safety, not tidiness.
 # If your data is 100% public and you *want* it versioned, remove these lines deliberately.
-data/
+# (Pattern note: `data/*`, not `data/` — git cannot re-include files under an
+# excluded directory, so the README and skeleton below would silently vanish.)
+data/*
 !data/README.md
+!data/raw/
+data/raw/*
 !data/raw/.gitkeep
 
 # Fetched fulltexts are retrievable from the fetch log; don't bloat the repo.
