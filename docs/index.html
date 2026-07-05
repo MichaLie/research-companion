@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Companion — a colleague in your project folder</title>
+<meta name="description" content="A verification-first research companion for Claude Code: six-phase lifecycle, hook-enforced gates, blind fresh-eyes review. Designed to protect researchers against de-skilling.">
+<style>
+  :root{
+    --paper:#faf8f3; --card:#ffffff; --ink:#22272e; --muted:#5c6672;
+    --accent:#0f6b5c; --accent-soft:#e3efec; --caution:#a05a00; --caution-soft:#fdf3e3;
+    --line:#e3ded4; --mono:ui-monospace,"Cascadia Code",Consolas,Menlo,monospace;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;font-size:17px}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a:hover{border-bottom-color:var(--accent)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:72px 0 48px;border-bottom:1px solid var(--line)}
+  h1{font-family:var(--serif);font-weight:normal;font-size:44px;line-height:1.15;margin-bottom:14px}
+  .tagline{font-size:20px;color:var(--muted);max-width:620px}
+  .tagline b{color:var(--ink);font-weight:600}
+  .header-links{margin-top:28px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:9px 18px;border-radius:8px;font-size:15px;font-weight:600;border:1px solid var(--line)}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn.primary:hover{border-bottom-color:var(--accent);opacity:.92}
+  .btn:hover{border-bottom-color:var(--line);background:var(--accent-soft)}
+  section{padding:52px 0;border-bottom:1px solid var(--line)}
+  h2{font-family:var(--serif);font-weight:normal;font-size:30px;margin-bottom:8px}
+  .kicker{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px}
+  .lead{color:var(--muted);max-width:640px;margin-bottom:30px}
+  .receipt{font-size:12.5px;font-family:var(--mono);color:var(--muted);white-space:nowrap}
+  .receipt a{color:var(--muted);border-bottom:1px dotted var(--muted)}
+  .receipt a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .receipt::before{content:"receipt → "}
+  .thesis{font-family:var(--serif);font-size:26px;line-height:1.45;max-width:720px;padding:8px 0 4px}
+  .thesis em{color:var(--accent);font-style:normal}
+  .phases{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  .phase{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+  .phase .num{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.08em}
+  .phase h3{font-size:17px;margin:4px 0 8px}
+  .phase blockquote{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--muted);border-left:3px solid var(--accent-soft);padding-left:12px;margin:8px 0 10px}
+  .phase p{font-size:14.5px;color:var(--muted)}
+  .arch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .arch .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px}
+  .arch h3{font-size:16px;margin-bottom:6px}
+  .arch p{font-size:14px;color:var(--muted);margin-bottom:10px}
+  .term{background:#22272e;color:#d7e0d9;font-family:var(--mono);font-size:13px;line-height:1.55;border-radius:12px;padding:18px 20px;margin:22px 0 10px;overflow-x:auto}
+  .term .g{color:#7fd1b9}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .agent{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .agent h3{font-size:18px;margin-bottom:4px}
+  .agent .sub{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:10px}
+  .agent ul{list-style:none}
+  .agent li{font-size:14.5px;color:var(--muted);padding:5px 0 5px 18px;position:relative}
+  .agent li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+  .verdicts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .v{font-family:var(--mono);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px}
+  .v.ok{background:var(--accent-soft);color:var(--accent)}
+  .v.un{background:var(--caution-soft);color:var(--caution)}
+  .v.con{background:#fbe9e7;color:#b3362a}
+  .story{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:26px 28px;margin-top:6px}
+  .story ol{margin-left:20px}
+  .story li{margin:10px 0;color:var(--muted);font-size:15.5px}
+  .story li b{color:var(--ink)}
+  .ledger{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  .ledger .card{border-radius:12px;padding:20px 22px;font-size:14.5px}
+  .ledger .tested{background:var(--accent-soft);border:1px solid #c6ded8}
+  .ledger .untested{background:var(--caution-soft);border:1px solid #ecd9b8}
+  .ledger h3{font-size:15px;margin-bottom:8px}
+  .ledger ul{margin-left:18px;color:var(--muted)}
+  .ledger li{margin:4px 0}
+  .steps{counter-reset:step;margin-top:10px}
+  .step{display:flex;gap:18px;padding:14px 0;border-bottom:1px dashed var(--line);align-items:baseline}
+  .step:last-child{border-bottom:none}
+  .step::before{counter-increment:step;content:counter(step);font-family:var(--serif);font-size:26px;color:var(--accent);min-width:28px}
+  .step div{font-size:16px}
+  .step .note{font-size:14px;color:var(--muted)}
+  code{font-family:var(--mono);font-size:.9em;background:var(--accent-soft);padding:1px 6px;border-radius:5px}
+  footer{padding:44px 0 64px;font-size:14px;color:var(--muted)}
+  footer .motto{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--ink);margin-bottom:14px}
+  @media(max-width:720px){.phases,.cols,.arch,.ledger{grid-template-columns:1fr}h1{font-size:34px}.thesis{font-size:22px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Research Companion</h1>
+    <p class="tagline">A thoughtful research colleague that lives in your project folder — it makes sure it <b>understands before it acts</b>, grounds methods in <b>current literature</b>, shows <b>every step and every doubt</b>, gives finished work <b>fresh eyes</b> — and leaves you a little <b>sharper</b> after every project.</p>
+    <div class="header-links">
+      <a class="btn primary" href="https://github.com/MichaLie/research-companion">Get it on GitHub</a>
+      <a class="btn" href="#start">Quick start</a>
+      <a class="btn" href="https://github.com/MichaLie/research-companion/blob/main/LICENSE">MIT license</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The thesis</div>
+    <p class="thesis">De-skilling is not a property of AI. It is a property of <em>how you configure the delegation</em>. The same agent, configured as a butler, amputates the researcher's judgment; configured as a colleague and bounded by verification, it multiplies it.</p>
+    <p class="lead" style="margin-top:18px">This package is that configuration, written down: a constitution, two specialist subagents, three enforcement hooks, and a live dashboard — dropped into a folder. No gates <i>felt</i> as gates, no cop energy: the checking is choreographed into the collaboration itself. <span class="receipt"><a href="https://github.com/MichaLie/research-companion/blob/main/CLAUDE.md">CLAUDE.md — the constitution</a></span></p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The lifecycle</div>
+    <h2>Six phases, each with its own opening line</h2>
+    <p class="lead">The opening sentences are verbatim from the constitution — they are the architecture. Any session, however new, reads <code>PROJECT.md</code> and resumes mid-journey; there is no magic word.</p>
+    <div class="phases">
+      <div class="phase"><div class="num">PHASE 1 · UNDERSTAND</div>
+        <blockquote>"Let me make sure I correctly understand the research problem and what needs to be done."</blockquote>
+        <p>Rephrases your messy brief back to you; interviews one question at a time; checksums the data on day one — and treats every claim the brief makes <i>about</i> the data as a hypothesis to test, not a fact to inherit.</p></div>
+      <div class="phase"><div class="num">PHASE 2 · GROUND</div>
+        <blockquote>"Understood — let me ground myself in the most current methods before we commit to anything."</blockquote>
+        <p>The librarian searches current literature — never recalls from memory — and returns a memo with proposed-vs-adopted labels and declared boundaries.</p></div>
+      <div class="phase"><div class="num">PHASE 3 · PLAN</div>
+        <blockquote>"Here are the directions we could take — with what each one buys, and what it risks."</blockquote>
+        <p>Options before your preference is elicited; a reviewer rehearsal; a mandatory devil's advocate; then the choice — and the method — recorded in <b>your own words</b>, signed.</p></div>
+      <div class="phase"><div class="num">PHASE 4 · ANALYZE</div>
+        <blockquote>"Starting the analysis — I'll narrate as I go, and the dashboard stays current."</blockquote>
+        <p>Watched diffs on every transformation; a thirty-second prediction beat before each new result — your intuition, kept in training; every run auto-logged by a hook.</p></div>
+      <div class="phase"><div class="num">PHASE 5 · FRESH EYES</div>
+        <blockquote>"Done. Before we trust it, let's give it fresh eyes — so nobody has to rely on memory or trust, including me."</blockquote>
+        <p>An independent reviewer in a clean context re-runs the code, recounts the Ns, re-opens the citations — and re-derives the design's premises from the raw data.</p></div>
+      <div class="phase"><div class="num">PHASE 6 · CLOSE</div>
+        <blockquote>"Here's what we did, what we verified, and one thing worth taking with you."</blockquote>
+        <p>A plain-language summary, a ready-to-paste AI-disclosure paragraph drafted from the log, and one concept worth two minutes of your attention.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Enforcement</div>
+    <h2>Prose decays; architecture doesn't</h2>
+    <p class="lead">Instructions are requests an agent can drift from over a long session. The rules that matter most are therefore not paragraphs — they are hooks that physically run.</p>
+    <div class="arch">
+      <div class="card"><h3>The gate</h3><p>Nothing in <code>analysis/</code> executes until a decision signed in the researcher's own words exists. Blocked means blocked — exit&nbsp;code&nbsp;2, before the command runs.</p><span class="receipt"><a href="https://github.com/MichaLie/research-companion/blob/main/.claude/hooks/gate_check.py">gate_check.py</a></span></div>
+      <div class="card"><h3>The spec log</h3><p>Every estimation run is auto-recorded — including the nineteen that never make the paper. The garden of forking paths, written by machinery, append-only.</p><span class="receipt"><a href="https://github.com/MichaLie/research-companion/blob/main/.claude/hooks/spec_log.py">spec_log.py</a></span></div>
+      <div class="card"><h3>The session brief</h3><p>Each session wakes already knowing the project's phase — <code>PROJECT.md</code>'s status line is injected at start. Say hello in your own words; it resumes.</p><span class="receipt"><a href="https://github.com/MichaLie/research-companion/blob/main/.claude/hooks/session_brief.py">session_brief.py</a></span></div>
+    </div>
+    <div class="term">$ python analysis/model.py<br>
+<span class="g">GATE (this is the collaboration's one hard rule, not a malfunction):</span> scripts in analysis/ run only after a signed decision exists in decisions/ — a .md containing the line 'status: SIGNED' with the researcher's choice and one-line rationale in their own words. […] The gate's logic is plainly written in .claude/hooks/gate_check.py and can be adjusted — but never silently bypassed.</div>
+    <span class="receipt"><a href="https://github.com/MichaLie/research-companion/blob/main/.claude/hooks/gate_check.py">the actual message, in the actual hook</a></span>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The subagents</div>
+    <h2>Two colleagues who never meet</h2>
+    <p class="lead">Separation is the point: the reviewer never sees the builder's reasoning — blindness by architecture, not by promise.</p>
+    <div class="cols">
+      <div class="agent"><h3>The librarian</h3><div class="sub">grounds every methods choice in current literature</div>
+        <ul>
+          <li>Searches, never recalls — methods consensus moves faster than any model's training data.</li>
+          <li>Logs <b>every query it constructs, and why</b>, before running it.</li>
+          <li>Labels methods <b>proposed</b> vs <b>adopted</b>; grounds adoption in counts, not impressions.</li>
+          <li>Must declare its boundaries: a mandatory <i>"What I did not search."</i></li>
+          <li>Re-opens every identifier before the memo ships.</li>
+        </ul>
+        <span class="receipt" style="display:block;margin-top:12px"><a href="https://github.com/MichaLie/research-companion/blob/main/.claude/agents/librarian.md">librarian.md — the charter</a></span></div>
+      <div class="agent"><h3>Fresh eyes</h3><div class="sub">independent review, clean context, mechanical first</div>
+        <ul>
+          <li>Re-runs the code, recounts every N, recomputes a headline number, re-opens the citations.</li>
+          <li>Re-derives the design's factual premises from the raw data alone.</li>
+          <li>Verifies, never fixes — a reviewer who repairs becomes co-author of the error.</li>
+          <li>No summary adjectives. Verdicts only:</li>
+        </ul>
+        <div class="verdicts"><span class="v ok">VERIFIED</span><span class="v un">UNVERIFIED</span><span class="v con">CONTRADICTED</span></div>
+        <span class="receipt" style="display:block;margin-top:12px"><a href="https://github.com/MichaLie/research-companion/blob/main/.claude/agents/fresh-eyes.md">fresh-eyes.md — the charter</a></span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Field-tested</div>
+    <h2>Proven in a live arc — against sealed ground truth</h2>
+    <p class="lead">Before publication, the companion ran a complete six-phase project on synthetic data with a <b>planted true effect and planted traps</b>, played blind by a real researcher. The receipts are in the changelog; the misses became v0.3's rules.</p>
+    <div class="story"><ol>
+      <li><b>The estimate bracketed the truth.</b> Planted effect: exactly +4.0. Reported, honestly: "+3 to +4.5, modest" — with the imprecise cohort labelled imprecise.</li>
+      <li><b>The hooks held in the wild</b> — the gate blocked an unsigned run in a live session (even in bypass-permissions mode), unlocked on signature, and auto-logged every specification, including a bug caught <i>before</i> its result was revealed.</li>
+      <li><b>Fresh eyes caught a fabricated citation.</b> The librarian asserted "published QJE 2020" as fact; the blind reviewer traced the real article of record (AERJ 2024) and returned the project's only CONTRADICTED. Resolved by the researcher, in writing.</li>
+      <li><b>One trap was only half-caught — and it wrote the deepest new rule.</b> A "global testing change" inherited from the brief was actually one district-year stored at half scale; every number replicated perfectly on the false premise. Hence v0.3: <i>the brief is testimony — check it against the data.</i></li>
+    </ol></div>
+    <span class="receipt" style="display:block;margin-top:12px"><a href="https://github.com/MichaLie/research-companion/blob/main/README.md">README — the full evidence-tagged changelog</a></span>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The honest ledger</div>
+    <h2>What's verified, what isn't</h2>
+    <p class="lead">The topic is verification; the materials must practise it. This page would break its own rules if it only showed the green column.</p>
+    <div class="ledger">
+      <div class="card tested"><h3>Tested</h3><ul>
+        <li>Gate + spec-log: 18-case matrix on Windows, plus a live in-session arc</li>
+        <li>Fulltext fetcher against the real Unpaywall API</li>
+        <li>Cross-platform hooks: Windows (<code>py</code> launcher, backslash paths, PowerShell tool) and POSIX</li>
+        <li>Loud, disclosed degradation on machines without Python</li>
+      </ul></div>
+      <div class="card untested"><h3>Not yet — stated plainly</h3><ul>
+        <li>The session brief inside a real session start</li>
+        <li>v0.3's new beats (anomaly scan, methods card, proactive teach mode) in a live arc</li>
+        <li>macOS since the cross-platform patch</li>
+        <li>Rules reviewed by <b>2026-10-05</b> — they expire like milk, not marble</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <div class="kicker">Quick start</div>
+    <h2>Three steps</h2>
+    <div class="steps">
+      <div class="step"><div><b>Get the folder.</b> <code>git clone https://github.com/MichaLie/research-companion.git</code> — or download the ZIP. <span class="note">You need Claude Code (the desktop app is fine) and Python 3.8+ for the enforcement hooks — without Python, the rules fall back from enforced to promised, and the companion tells you so.</span></div></div>
+      <div class="step"><div><b>Dump your context.</b> Drop everything into <code>context/</code> — messy is fine. Half-sentences, an old grant paragraph, a codebook, the email to your coauthor.</div></div>
+      <div class="step"><div><b>Say hello — in your own words.</b> Open Claude Code in the folder and tell it what you brought. It takes it from there, and <code>PROJECT.md</code> remembers everything between sessions.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="motto">"An honest gap outranks a fluent guess."</p>
+    <p>MIT licensed · <a href="https://github.com/MichaLie/research-companion/blob/main/CITATION.cff">citable</a> · drafted with Claude (Fable&nbsp;5), disclosed — like every artifact this project produces · every claim on this page links to the file that proves it, because that is the whole idea.</p>
+  </div>
+</footer>
+
+</body>
+</html>

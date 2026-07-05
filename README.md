@@ -2,6 +2,8 @@
 
 A drop-in Claude Code package that turns an AI agent into a **thoughtful research colleague**: it makes sure it understands before it acts, grounds every methods choice in the current literature (not in stale training memory), shows what it's doing and why at every step, gives finished work fresh eyes before anyone trusts it — and leaves you a little sharper after every project.
 
+**► The five-minute tour, with receipts: [michalie.github.io/research-companion](https://michalie.github.io/research-companion/)** — every claim on that page links to the file in this repo that proves it.
+
 No gates, no drills, no cop energy. The same verification philosophy as its sibling packages, built instead into the choreography of a well-run collaboration — the way a good lab's habits feel: *of course we do it this way.*
 
 ## What you need (once)
