@@ -86,6 +86,8 @@ A full six-phase arc ran against a synthetic education dataset with sealed groun
 ## Siblings
 This is the third edition of one design. `econ-research-agent/` holds the **PI edition** (explicit gates, drills, supervision framing — for when you want the discipline visible) and its `variants/phd-student/` (tutor posture, mentor escalation). Same physics, three postures — which is the project's whole thesis: de-skilling and up-skilling are properties of the configuration, not of the machine.
 
+The evidence behind that thesis — why judgment has to stay human, per the peer-reviewed record — reads as the [critical-thinking foundations](https://michalie.github.io/tah-day2/foundations/critical-thinking-guide.html): a field guide, a prompt phrasebook, and a practice room to test yourself in.
+
 ## Versioning & disclosure
 Review by **2026-10-05** — rules about a moving frontier expire like milk, not marble. Drafted with Claude (Fable 5) on 2026-07-05 from the project's seed documents. Tested live before shipping: the fetch script against the Unpaywall API and a direct working-paper link (both retrieved and validated as real PDFs); the gate hook (blocks, passes through, unlocks on signature); the spec-log hook (records estimations, ignores other commands, flags errors); the data manifest (detects a changed file). Untested: the hooks inside a real Claude Code session end-to-end, and everything else against a real research project. Not yet reviewed by a practicing econometrician. The topic is verification; the materials must practise it.
 
