@@ -1,5 +1,7 @@
 # Research Companion (v0.3.1)
 
+> **Retired, November 2026.** This project is no longer developed. Its literature workflow continues in the [Research Intelligence Engine](https://github.com/MichaLie/Research-Intelligence-Engine), and the risks it guarded against are mapped in the [Agent Risk Atlas](https://michalie.github.io/agent-risk-atlas/). The parts for analysing your own data have no successor yet. The repository stays here, read-only, as it was at v0.3.1.
+
 A drop-in Claude Code package that turns an AI agent into a **thoughtful research colleague**: it makes sure it understands before it acts, grounds every methods choice in the current literature (not in stale training memory), shows what it's doing and why at every step, gives finished work fresh eyes before anyone trusts it — and leaves you a little sharper after every project.
 
 **► The five-minute tour, with receipts: [michalie.github.io/research-companion](https://michalie.github.io/research-companion/)** — every claim on that page links to the file in this repo that proves it.
